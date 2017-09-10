@@ -14,8 +14,21 @@
 
 <pre id='untested_idl' style='display:none'>
 
+[Exposed=(Window,Worker)]
+interface PerformanceEntry {
+    readonly attribute DOMString           name;
+    readonly attribute DOMString           entryType;
+    readonly attribute DOMHighResTimeStamp startTime;
+    readonly attribute DOMHighResTimeStamp duration;
+    [Default] object toJSON();
+};
+
+typedef double DOMHighResTimeStamp;
+
+[Exposed=(Window,Worker)]
 interface PerformanceResourceTiming : PerformanceEntry {
-    readonly attribute DOMString initiatorType;
+    readonly attribute DOMString           initiatorType;
+    readonly attribute DOMString           nextHopProtocol;
     readonly attribute DOMHighResTimeStamp workerStart;
     readonly attribute DOMHighResTimeStamp redirectStart;
     readonly attribute DOMHighResTimeStamp redirectEnd;
@@ -28,9 +41,10 @@ interface PerformanceResourceTiming : PerformanceEntry {
     readonly attribute DOMHighResTimeStamp requestStart;
     readonly attribute DOMHighResTimeStamp responseStart;
     readonly attribute DOMHighResTimeStamp responseEnd;
-    [MeasureAs=PerformanceResourceTimingSizes] readonly attribute unsigned long long transferSize;
-    [MeasureAs=PerformanceResourceTimingSizes] readonly attribute unsigned long long encodedBodySize;
-    [MeasureAs=PerformanceResourceTimingSizes] readonly attribute unsigned long long decodedBodySize;
+    readonly attribute unsigned long long  transferSize;
+    readonly attribute unsigned long long  encodedBodySize;
+    readonly attribute unsigned long long  decodedBodySize;
+    [Default] object toJSON();
 };
 </pre>
 
@@ -63,6 +77,9 @@ function test_idl() {
 
   idl_array.add_untested_idls(document.getElementById("untested_idl").textContent);
   idl_array.add_idls(document.getElementById("idl").textContent);
+  idl_array.add_objects({
+      PerformanceNavigationTiming: ["performance.getEntriesByType(\"navigation\")[0]"]
+  });
 
   idl_array.test();
 }
